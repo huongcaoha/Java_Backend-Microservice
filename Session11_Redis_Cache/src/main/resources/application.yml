@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: Session11_Redis_Cache
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/microservices_session10_kafka_pharmacy_db
+    username: postgres
+    password: 12345678
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
