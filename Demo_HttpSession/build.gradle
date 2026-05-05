@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4' // Hạ từ 4.0.5 xuống 3.3.4
+    id 'io.spring.dependency-management' version '1.1.6' // Đồng bộ bản dependency
+}
+
+group = 'org.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo_HttpSession'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Sửa tên từ 'spring-boot-starter-webmvc' thành 'spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Các thư viện khác giữ nguyên
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Đảm bảo dùng đúng bản này để IntelliJ nhận diện properties
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

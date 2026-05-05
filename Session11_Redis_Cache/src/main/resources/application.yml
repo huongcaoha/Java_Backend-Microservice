@@ -1,3 +1,8 @@
+server:
+  servlet:
+    # 2. Cau hinh thoi gian het han Session (vi du: 30 phut)
+    session:
+      timeout: 30m
 spring:
   application:
     name: Session11_Redis_Cache
@@ -6,7 +11,11 @@ spring:
     redis:
       host: localhost
       port: 6379
-
+  session:
+    store-type: redis
+    redis:
+      namespace: "rikkei:pharmacy:session"
+      save-mode: always
 
   cache:
     type: redis

@@ -1,7 +1,13 @@
+//plugins {
+//    id 'java'
+//    id 'org.springframework.boot' version '4.0.5'
+//    id 'io.spring.dependency-management' version '1.1.7'
+//}
+// Hạ phiên bản xuống thấp để có thể sử dụng đc Redis Session
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.5'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.3.4' // Hạ từ 4.0.5 xuống 3.3.4
+    id 'io.spring.dependency-management' version '1.1.6' // Đồng bộ bản dependency
 }
 
 group = 'org.example'
@@ -22,7 +28,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.security:spring-security-test'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
@@ -39,6 +47,10 @@ dependencies {
 
     // 2. Thư viện kết nối và làm việc cụ thể với Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.17.0'
+
+    implementation 'org.springframework.session:spring-session-data-redis'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 tasks.named('test') {
