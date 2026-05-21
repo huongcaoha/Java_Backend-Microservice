@@ -1,0 +1,6 @@
+rootProject.name = 'my-microservices-project'
+
+// Khai báo các module con
+include 'api-gateway'
+include 'identity-service'
+include 'student-service'

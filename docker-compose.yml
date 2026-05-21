@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  # Tạo một mạng nội bộ riêng biệt
+  internal-network:
+    driver: bridge
+
+services:
+  # --- API GATEWAY: NGƯỜI GÁC CỔNG ---
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080" # Duy nhất thằng này mở cổng ra máy host (Internet)
+    networks:
+      - internal-network
+    depends_on:
+      - identity-service
+      - student-service
+
+  # --- IDENTITY SERVICE: TÀNG HÌNH ---
+  identity-service:
+    build: ./identity-service
+    # CHÚ Ý: Tuyệt đối KHÔNG khai báo phần 'ports' ở đây
+    networks:
+      - internal-network
+
+  # --- STUDENT SERVICE: TÀNG HÌNH ---
+  student-service:
+    build: ./student-service
+    # CHÚ Ý: Tuyệt đối KHÔNG khai báo phần 'ports' ở đây
+    networks:
+      - internal-network

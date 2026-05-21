@@ -19,9 +19,6 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // Giả sử bạn sẽ viết một filter tên là JwtAuthenticationFilter
-    // private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -30,34 +27,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Cấu hình CORS: Cho phép Frontend gọi vào
+                // 1. Cấu hình CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                // 2. Tắt CSRF và Form Login (Chuẩn cho REST API)
+                // 2. Tắt CSRF và Form Login
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
 
                 // 3. Phân quyền (Authorize)
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
 
-                // 4. Quản lý Session: Không lưu trạng thái (Stateless)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                // 4. Quản lý Session Stateless
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-        // 5. QUAN TRỌNG: Thêm Filter kiểm tra JWT trước filter mặc định
-        // http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                // 5. ĐÃ SỬA: Thêm JWTFilterChain vào trước UsernamePasswordAuthenticationFilter
+                .addFilterBefore(new JWTFilterChain(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Bean cấu hình CORS chi tiết
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // Chỉ cho phép port frontend của bạn
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-User-Username", "X-User-Role"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

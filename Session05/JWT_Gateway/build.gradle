@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.3'
+    id 'org.springframework.boot' version '4.0.6'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -19,30 +19,32 @@ repositories {
 }
 
 ext {
-    // Phiên bản Spring Cloud 2024.0.0 hoàn toàn tương thích và tối ưu cho Spring Boot 3.4.x
-    set('springCloudVersion', "2024.0.0")
+    set('springCloudVersion', "2025.1.1")
 }
 
 dependencies {
-    // Theo dõi và giám sát hệ thống
+    // Chỉ giữ lại Actuator phục vụ giám sát
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    // API Gateway & Load Balancer (Đã chạy ngầm WebFlux và Netty bên trong)
-    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    // BẮT BUỘC: Chỉ dùng Gateway Webflux cho API Gateway
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webflux'
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
-
-    // Service Discovery (Eureka Client)
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
-    // Thư viện bổ trợ Boilerplate Code
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Cấu hình Test chuẩn cho môi trường Spring Boot (Hỗ trợ cả Reactive)
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // Thư viện bảo mật JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+
+    // Hỗ trợ test cho hệ thống Reactive
+    testImplementation 'io.projectreactor:reactor-test'
     testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 dependencyManagement {

@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4' // Hạ xuống bản 3.3.x ổn định
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+ext {
+    // Phiên bản Spring Cloud phù hợp tuyệt đối với Boot 3.3.x
+    set('springCloudVersion', "2023.0.3")
+}
+
+group = 'org.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Session13_JWT_Gateway'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    // Thư viện QUAN TRỌNG NHẤT cho Gateway
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+
+    // Các thư viện hỗ trợ Cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+
+    // Bảo mật
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT (Sử dụng bản 0.12.x để ổn định nhất hiện nay)
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    // Công cụ
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
